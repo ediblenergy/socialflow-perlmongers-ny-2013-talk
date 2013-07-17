@@ -17,11 +17,27 @@
 
 
 
-                                          Web Development
 
-     * Catalyst
-     * Plack
-     * Starman
+
+
+
+
+
+
+
+                                                           3rd party
+
+     * Net::Twitter
+     * Facebook::Graph
+     * Web::Scraper
+
+
+
+
+
+
+
+
 
 
 

@@ -16,6 +16,14 @@
 
 
 
+
+
+
+
+
+
+
+
     <?php
         $request = $_GET["business_request"];
         for($hour = 9; $hour <= 18; $hour++) {
@@ -23,6 +31,14 @@
         }
 
     ?>
+
+
+
+
+
+
+
+
 
 
 

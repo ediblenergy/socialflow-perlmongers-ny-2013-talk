@@ -17,11 +17,27 @@
 
 
 
-                                             3rd party
 
-     * Net::Twitter
-     * Facebook::Graph
-     * Web::Scraper
+
+
+
+
+
+
+
+                                                            Database
+
+     * DBIx::Class
+     * ZMQ
+     * Redis
+
+
+
+
+
+
+
+
 
 
 
