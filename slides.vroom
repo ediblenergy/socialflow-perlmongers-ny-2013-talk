@@ -1,0 +1,142 @@
+# This is a sample Vroom input file. It should help you get started.
+#
+# Edit this file with your content. Then run `vroom vroom` to start
+# the show!
+#
+# See `perldoc Vroom` for complete details.
+#
+---- config
+# Basic config options.
+title: Vroom!
+indent: 5
+auto_size: 1
+# height: 18
+# width: 69
+vim_opts: '-u NONE'
+skip: 0
+
+# The following options are for Gvim usage.
+# vim: gvim
+# gvimrc: |
+#   set fuopt=maxhorz,maxvert
+#   set guioptions=egmLtT
+#   set guifont=Bitstream_Vera_Sans_Mono:h18
+#   set guicursor=a:blinkon0-ver25-Cursor
+#   colorscheme default
+
+---- center
+SocialFlow
+
+* From 20_000 feet
+
++* by Samuel Kaufman
+
+----
+"If I have seen further it is by standing on the shoulders of giants."
+- Isaac Newton
+
++ "Good artists copy; great artists steal"
+- Steve Jobs, missatributing a quote to Pablo Picasso
+
+----
+
+== A bit about myself
+
+----python,i4
+# Python
+for task in job.getTasks():
+    self.reinvent(wheel)
+
+----php,i4
+
+<?php
+    $request = $_GET["business_request"];
+    for($hour = 9; $hour <= 18; $hour++) {
+        beat_code_with_stick_until_it_doesnt_show_whitescreen_of_death($request);
+    }
+
+?>
+----ruby,i4
+
+----perl,i4
+
+sub solve_for_business_request {
+    my($self,$request) = @_;
+    return $self->search_metacpan_for($request)
+        || die "beats me";
+}
+
+
+====
+Its hard to play down the role CPAN has played in the development of SocialFlow.
+
+----
+== Database
+
+* DBIx::Class
+* ZMQ
+* Redis
+
+----
+== 3rd party 
+
+* Net::Twitter
+* Facebook::Graph
+* Web::Scraper
+
+----
+
+== Web Development
+
+* Catalyst
+* Plack
+* Starman
+
+----
+
+== Toolchain
+
+* Dist::Zilla
+* Devel::Local
+* Object::Remote
+* App::Nopaste
+* App::GitGot
+* Reply
+* App::cpanminus
+
+----
+== Getting Started
+
+* Write a file called 'slides.vroom'.
+  * Do this in a new directory.
+* Run 'vroom vroom'.
+* Voilà!
+
+----
+== Navigation
+
+* Hit <SPACE> to move forward.
+* Hit <BACKSPACE> to go backwards.
+* Hit 'Q' to quit.
+
+---- perl,i4
+# This is some Perl code.
+# Notice the syntax highlighting.
+# Run it with the <RR> vim command.
+for my $word (qw(Vroom totally rocks!)) {
+    print "$word\n";
+}
+
+----
+== Get Vroom!
+
+* http://search.cpan.org/dist/Vroom/
+* http://github.com/ingydotnet/vroom-pm/
+
+----
+== Vroom as HTML
+
+* http://ingydotnet.github.com/vroom-pm/
+
+----
+== The End
