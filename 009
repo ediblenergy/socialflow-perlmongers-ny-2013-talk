@@ -7,48 +7,13 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                                                    Some useful stuff SocialFlow uses
+                                                     Some useful stuff SocialFlow uses
 
      * Thrift
      * DBIx::Class::Candy
      * Import::Into
      * Company CPAN
      * ZMQ
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

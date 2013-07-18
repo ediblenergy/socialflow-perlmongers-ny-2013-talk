@@ -1,15 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
      #!/usr/bin/env perl
      use strictures 1;
      use CPAN::Mini::Inject;
@@ -45,18 +33,3 @@
          print "To repository: $mcpani->{config}{repository}\n\n";
      }
      $mcpani->writelist;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

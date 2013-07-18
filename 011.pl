@@ -4,24 +4,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
      use Hypertable::ThriftClient;
      my $ht = Hypertable::ThriftClient->new($master, $port);
      my $ns = $ht->namespace_open($namespace);
@@ -34,23 +16,6 @@
      $ht->mutator_set_cell($mutator, $cell);
      $ht->mutator_flush($mutator);
      $ht->mutator_close($users_mutator);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

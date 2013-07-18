@@ -3,24 +3,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
      my $id = 0;
      my $bloom = Algorithm::Dablooms->new({
          capacity => 20_000,
@@ -35,23 +17,6 @@
      #later
 
      $bloom->contains( "Grand Duchess Anastasia Nikolaevna of Russia" ); #its true!
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

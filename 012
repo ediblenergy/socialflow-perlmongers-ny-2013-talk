@@ -7,23 +7,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
      Operation DBIx::Class cleanup
 
      leveraging
@@ -31,24 +14,6 @@
      DBIx::Class::Candy & Import::Into
 
      warning: controversial
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

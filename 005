@@ -5,46 +5,11 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
      Object::Remote - https://metacpan.org/module/Object::Remote
 
      http://www.youtube.com/watch?v=eoNw5jmKvB8 #mst the __END__ of everything
 
      cat fatpacked_script.pl | ssh $host perl -
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

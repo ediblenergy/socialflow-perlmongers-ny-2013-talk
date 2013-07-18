@@ -1,8 +1,3 @@
-
-
-
-
-
      #!/bin/sh
 
      set -e
@@ -53,10 +48,3 @@
      find authors/id -name '*.*' | perl -pe 's!^authors/id/!!;' | sort -u >work/tree.all
 
      sort -u work/targets.* | comm -13 - work/tree.all | perl -pe 's!^!authors/id/!;' | xargs --no-run-if-empty rm -v
-
-
-
-
-
-
-

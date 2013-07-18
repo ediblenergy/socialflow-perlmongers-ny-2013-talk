@@ -3,24 +3,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                                                    sfs3
 
      [10:26] <edibsk> hey paul, I'm doing a perlmongers ny.pm talk tonight about interesting perl projects at SocialFlow, I was thinking of briefly covering sfs3
@@ -35,23 +17,6 @@
      [10:35] <LeoNerd> So what sfs3 does is stores data in a subspace called data/ and extra metadata in a space called meta/. One item of metadata is a tiny text file just containing the md5sum in nice easy ASCII
      [10:36] <LeoNerd> The reason it does that, rather than storing x-aws-meta-md5sum is that S3 does not give you _any_ way to set the metadata at the end.. only before you start
      [10:36] <LeoNerd> But if you're uploading a 20GB file you don't want to read it once off disk just to calculate the md5sum, before you read it a second time to upload it.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

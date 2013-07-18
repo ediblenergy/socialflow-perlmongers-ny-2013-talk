@@ -1,17 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
      SocialFlow's CPAN stack:
 
      Database
@@ -43,20 +29,3 @@
      * App::Ack
      * Reply
      * App::cpanminus
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

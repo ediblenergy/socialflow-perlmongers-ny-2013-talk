@@ -72,6 +72,5 @@
        my ( $self, $tarball ) = @_;
        $self->ssh->system("add_dist $tarball");
      }
-     H
 
      1;

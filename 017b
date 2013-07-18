@@ -4,25 +4,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
                                                                Company CPAN
 
      * Dependencies are mixed with regular cpan deps:
@@ -32,23 +13,7 @@
 
      * had problems with CPAN::Mini not mirroring stuff properly
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+     * Pinto didn't exist yet
 
 
 

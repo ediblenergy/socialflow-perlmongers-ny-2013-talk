@@ -1,5 +1,3 @@
-
-
      package SocialFlow::Web::Schema::Result::Client;
      use SocialFlow::Web::Schema::ResultBase {
          extra_components => [
@@ -55,8 +53,3 @@
      #......
 
      1;
-
-
-
-
-
