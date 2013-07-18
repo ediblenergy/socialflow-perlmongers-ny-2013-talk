@@ -42,7 +42,8 @@ Forte - for boosting earned media with paid
 
 Crescendo - for paid media
 
-Facebook & Twitter
+Currently we support Facebook & Twitter
+
 
 ----
 
@@ -89,21 +90,12 @@ Toolchain
 
 ----
 
-== Some useful stuff SocialFlow uses 
-
-* DBIx::Class::Candy
-* Import::Into
-* Company CPAN
-* ZMQ
-* Thrift
-
-----
 
 Object::Remote - https://metacpan.org/module/Object::Remote
 
 http://www.youtube.com/watch?v=eoNw5jmKvB8 #mst the __END__ of everything
 
-ssh $host | perl -
+cat fatpacked_script.pl | ssh $host perl -
 
 +System::Introspector
 
@@ -155,6 +147,16 @@ $bloom->contains( "Grand Duchess Anastasia Nikolaevna of Russia" ); #its true!
 
 ----
 
+== Some useful stuff SocialFlow uses 
+
+* Thrift
+* DBIx::Class::Candy
+* Import::Into
+* Company CPAN
+* ZMQ
+
+----
+
 Thrift
 
 "The Apache Thrift software framework, for scalable cross-language services development, combines a software stack with a code generation engine to build services that work efficiently and seamlessly between C++, Java, Python, PHP, Ruby, Erlang, Perl, Haskell, C#, Cocoa, JavaScript, Node.js, Smalltalk, OCaml and Delphi and other languages."
@@ -166,6 +168,7 @@ Things that use Thrift:
 * Hypertable
 * HBase
 * ElasticSearch
+* ?
 
 ---- perl
 
@@ -176,13 +179,22 @@ my $ns = $ht->namespace_open($namespace);
 my $users_mutator = $ht->mutator_open($ns, 'users', $ignore_unknown_cfs, 10);
 #...
 
-my $keys = new Hypertable::ThriftGen::Key({ row => $row, column_family => $cf, column_qualifier => $cq });
-my $cell = new Hypertable::ThriftGen::Cell({key => $keys, value => $val});
+my $keys = Hypertable::ThriftGen::Key->new({ row => $row, column_family => $cf, column_qualifier => $cq });
+my $cell = Hypertable::ThriftGen::Cell->new({key => $keys, value => $val});
 $ht->mutator_set_cell($mutator, $cell);
 $ht->mutator_flush($mutator);
 $ht->mutator_close($users_mutator);
 
-----perl
+----
+Operation DBIx::Class cleanup
+
+leveraging
+
+DBIx::Class::Candy & Import::Into
+
+warning: controversial
+
+---- perl
 
 use strict;
 use warnings;
@@ -228,484 +240,7 @@ __PACKAGE__->has_many(
     'client_id'
 );
 
-__PACKAGE__->has_many(
-    client_services => 'SocialFlow::Web::Schema::Result::ClientService',
-    'client_id'
-);
-
-__PACKAGE__->has_many(
-    appuser_client_services =>
-        'SocialFlow::Web::Schema::Result::AppuserClientService',
-    'client_id'
-);
-__PACKAGE__->has_many(
-    content_queues => 'SocialFlow::Web::Schema::Result::ContentQueue',
-    'client_id'
-    );
-
-__PACKAGE__->has_many(
-    email_transactions =>
-        'SocialFlow::Web::Schema::Result::EmailTransaction',
-    'client_id'
-);
-__PACKAGE__->might_have(
-    lead => 'SocialFlow::Web::Schema::Result::SalesforceClientLead',
-    'client_id'
-    );
-
-__PACKAGE__->has_many(
-    credit_cards => 'SocialFlow::Web::Schema::Result::ClientCreditCard',
-    'client_id'
-);
-
-__PACKAGE__->might_have(
-    billing_address => 'SocialFlow::Web::Schema::Result::BillingAddress',
-    'client_id'
-    );
-
-__PACKAGE__->has_many(
-    receipts => 'SocialFlow::Web::Schema::Result::Receipt',
-    'client_id'
-    );
-
-__PACKAGE__->has_many(
-    braintree_receipts => 'SocialFlow::Web::Schema::Result::BraintreeReceipt',
-    'client_id'
-    );
-
-__PACKAGE__->has_many(
-    opportunities => 'SocialFlow::Web::Schema::Result::SalesforceOpportunity',
-    'client_id'
-    );
-
-__PACKAGE__->has_many(
-    api_consumers =>
-        'SocialFlow::Web::Schema::Result::APIConsumer',
-        'client_id'
-    );
-
-__PACKAGE__->has_many(
-    feed_sources => 'SocialFlow::Web::Schema::Result::FeedSource', 'client_id'
-);
-
-__PACKAGE__->has_many(
-    google_transactions => 'SocialFlow::Web::Schema::Result::GoogleCheckoutTransaction',
-    'client_id'
-    );
-
-__PACKAGE__->has_many(
-    braintree_transactions => 'SocialFlow::Web::Schema::Result::BraintreeTransaction',
-    'client_id'
-    );
-
-__PACKAGE__->has_many(
-    google_checkout_orders => 'SocialFlow::Web::Schema::Result::GoogleCheckoutOrder',
-    'client_id'
-    );
-
-__PACKAGE__->has_many(
-    braintree_orders => 'SocialFlow::Web::Schema::Result::BraintreeOrder',
-    'client_id',
-    );
-
-__PACKAGE__->has_many(
-    groups => "SocialFlow::Web::Schema::Result::ClientGroup", 'client_id'
-);
-
-__PACKAGE__->has_many(
-    client_service_groups => 'SocialFlow::Web::Schema::Result::ClientServiceGroup', 'client_id'
-);
-
-__PACKAGE__->has_many(
-    client_group_appusers => 'SocialFlow::Web::Schema::Result::ClientGroupAppuser', 'client_id'
-);
-__PACKAGE__->has_many(
-    client_config_parameters =>
-        'SocialFlow::Web::Schema::Result::ClientConfigParameter',
-    'client_id'
-);
-__PACKAGE__->many_to_many(
-    config_parameters => 'client_config_parameters', 'config_parameter'
-);
-
-__PACKAGE__->has_many(
-    content_sources => 'SocialFlow::Web::Schema::Result::ContentSource',
-    'client_id'
-);
-
-__PACKAGE__->might_have(
-    bitly_credential_client => 'SocialFlow::Web::Schema::Result::BitlyCredentialClient',
-    'client_id'
-    );
-
-__PACKAGE__->has_many(
-    bitly_credentials => 'SocialFlow::Web::Schema::Result::BitlyCredential',
-    'client_id'
-);
-
-__PACKAGE__->might_have(
-    googl_credential_client => 'SocialFlow::Web::Schema::Result::GooglCredentialClient',
-    'client_id'
-    );
-
-__PACKAGE__->has_many(
-    googl_credentials => 'SocialFlow::Web::Schema::Result::GooglCredential',
-    'client_id'
-);
-__PACKAGE__->might_have(
-    trial_period => 'SocialFlow::Web::Schema::Result::ClientTrialPeriod',
-    'client_id'
-);
-
-__PACKAGE__->has_many(
-    promo_codes => 'SocialFlow::Web::Schema::Result::ClientPromoCode',
-    'client_id'
-);
-
-__PACKAGE__->has_many(
-    report_links => 'SocialFlow::Web::Schema::Result::ReportLink',
-    'client_id'
-);
-
-__PACKAGE__->might_have(
-    tribal_client => 'SocialFlow::Web::Schema::Result::TribalClient',
-    'client_id'
-);
-
-__PACKAGE__->has_many(
-    tribal_client_services => 'SocialFlow::Web::Schema::Result::TribalClientService',
-    'client_id'
-);
-
-__PACKAGE__->has_many(
-    client_socialflow_products => 
-    'SocialFlow::Web::Schema::Result::ClientSocialFlowProduct',
-    'client_id'
-);
-
-__PACKAGE__->has_many(
-    client_performance_reports =>
-    'SocialFlow::Web::Schema::Result::ClientPerformanceReport',
-    'client_id'
-);
-
-__PACKAGE__->has_many(
-    attention_accounts => 'SocialFlow::Web::Schema::Result::AttentionAccount', 'client_id'
-);
-
-__PACKAGE__->has_many(
-    billing_subscriptions => 'SocialFlow::Web::Schema::Result::BillingSubscription',
-    'client_id'
-);
-sub Active {
-    return +{
-        0 => 'lead',
-        1 => 'active',
-        2 => 'canceled',
-        3 => 'suspended',
-        4 => 'opt-in expired',
-    };
-}
-
-sub status {
-    my $self = shift;
-    return Active->{$self->active};
-}
-
-=method monthly_order
-
-Can only have 1 monthly order at any given time.
-
-=cut
-sub monthly_order {
-    my ($self) = @_;
-
-    # look for braintree orders
-    my @orders = $self->braintree_orders->search(
-        { is_monthly =>'true',
-          status => { -not_in  => ['canceled', 'not_yet_invoiced'] } });
-    foreach (@orders) {
-        next if ($_->socialflow_product->is_trial);
-        return $_;
-    }
-    
-    # if none found look for google checkout orders
-    my $order = $self->google_checkout_orders->search(
-        { 'is_monthly' =>'true',
-          status => { -not_in  => ['canceled'] } })->single;
-    return $order;
-}
-
-# deprecated
-sub monthly_bt_accounts {
-    my ($self) = @_;
-    my $total = 0;
-    my @orders = $self->braintree_orders->search(
-        { is_monthly =>'true',
-          status => { -not_in  => ['canceled', 'not_yet_invoiced'] } });
-    
-    foreach my $order (@orders) {
-        next if ($order->socialflow_product->is_trial);
-        $total += $order->number_accounts;
-    }
-    
-    return $total;
-}
-
-# deprecated
-sub yearly_bt_accounts {
-    my ($self) = @_;
-    my $total = 0;
-    my @orders = $self->braintree_orders->search(
-        { is_monthly => 'false',
-          status => { -not_in  => ['canceled', 'not_yet_invoiced'] } });
-    foreach my $order (@orders) {
-        $total += $order->number_accounts;
-    }
-
-    return $total;
-}
-
-sub num_monthly_accounts {
-    my ($self) = @_;
-    my $total = 0;
-    my @orders = $self->braintree_orders->search(
-        { is_monthly =>'true',
-          status => { -not_in  => ['canceled', 'not_yet_invoiced'] } });
-    foreach my $order (@orders) {
-        $total += $order->number_accounts;
-    }
-    @orders = $self->google_checkout_orders->search(
-        { 'is_monthly' =>'true',
-          status => { -not_in  => ['canceled'] } });
-
-    foreach my $order (@orders) {
-        next if ($order->socialflow_product->is_trial);
-        $total += $order->num_accounts;
-    }
-
-    return $total;
-}
-
-sub num_yearly_accounts {
-    my $self = shift;
-    
-    my $total = 0;
-    my @orders = $self->braintree_orders->search(
-        { is_monthly => 'false',
-          status => { -not_in  => ['canceled', 'not_yet_invoiced'] } });
-    foreach my $order (@orders) {
-        $total += $order->number_accounts;
-    }
-    @orders = $self->google_checkout_orders->search(
-        { 'is_monthly' => 'false',
-          status => { -not_in  => ['canceled'] } });
-    foreach my $order (@orders) {
-        $total += $order->num_accounts;
-    }
-    
-    return $total;
-}
-
-
-sub add_promo {
-    my ($self, $promo) = @_;
-    my $found = $self->promo_codes->find({ promo_code_id => $promo->promo_code_id });
-    if (!$found) {
-        $self->add_to_promo_codes({ promo_code_id => $promo->promo_code_id });
-    }
-}
-
-sub mark_promo_used {
-    my ($self, $promo) = @_;
-    $promo->update({ num_used => $promo->num_used + 1});
-}
-
-sub most_recent_promo {
-    my $self = shift;
-    return $self->promo_codes->search(
-        {}, 
-        { order_by => { -desc => 'create_date' } })->first;
-}
-
-sub start_trial {
-    my $self        = shift;
-    warn "STARTING TRIAL\n";
-    my $today       = DateTime->today;
-    my $trial_start = $today->clone->add( days => 1 );    #tomorrow at midnight
-    my $trial_end = $trial_start->clone->add( months => 1 );
-    warn "END DATE: " . $trial_end->datetime;
-    my $ret = $self->create_related( "trial_period",
-        { start_date => $trial_start, end_date => $trial_end } );
-    $self->discard_changes;
-    $ret;
-}
-
-sub trial_has_ended {
-    my $self         = shift;
-    my $trial_period = $self->trial_period;
-    return 0 unless $trial_period;
-    my $now = DateTime->now->epoch;
-    return $trial_period->end_date->epoch < $now;
-}
-
-sub is_in_trial {
-    my $self         = shift;
-    my $trial_period = $self->trial_period;
-    return 0 unless $trial_period;
-    my $now = DateTime->now->epoch;
-    if (   $now > $trial_period->start_date->clone->subtract( days => 1 )->epoch
-        && $now < $trial_period->end_date->epoch )
-    {
-        return 1;
-    }
-    return 0;
-}
-
-sub end_trial {
-    my $self         = shift;
-    my $trial_period = $self->trial_period;
-    return unless $trial_period;
-    return unless $trial_period->end_date;
-    my $now = DateTime->now->epoch;
-    if ($trial_period->end_date->epoch > $now) {
-        $trial_period->update({end_date => DateTime->today});
-    }
-}
-
-sub num_orders {
-    my $self = shift;
-    my @bt_orders = $self->braintree_orders->search({ status => { -not_in  => ['canceled', 'not_yet_invoiced'] }});
-    my @gc_orders = $self->google_checkout_orders->search({ status => {-not_in => ['canceled', 'not_yet_invoiced'] }});
-    my $num = @bt_orders + @gc_orders;
-    return $num;
-}
-
-# deprecated
-# find out the max # of social account this client can have
-sub account_limit {
-    my $self = shift;
-    
-    if ($self->access_tier < 2) {
-        return $self->access_tier + 1 if !$self->opted_in;
-
-        my $limit = 0;
-        my @bt_orders = $self->braintree_orders->search({ status => { -not_in  => ['canceled', 'not_yet_invoiced'] }});
-        foreach my $order (@bt_orders) {
-            $limit += $order->number_accounts;
-        }
-        
-        # TODO: fix this
-        my @gc_orders = $self->google_checkout_orders->search({ status => {-not_in => ['canceled', 'not_yet_invoiced'] }});
-        $limit += scalar(@gc_orders);
-        return $limit;
-        
-    } else { #enterprise
-        return $self->max_social_accts;
-    }
-}
-
-sub accounts_left {
-    my ($self) = @_;
-    my $total_accounts = $self->client_services->active_publishing_accounts->valid;
-    my $limit = $self->account_limit;
-    warn "Changes reflected";
-    my $left = $limit - $total_accounts;
-    warn "Total [$total_accounts] Limit[$limit] Left[$left]"; 
-    return $left;
-}
-
-sub tier {
-    my $self = shift;
-   
-    if ( my $arg = shift ) { 
-        my %map = ( standard => 0, business => 1, enterprise => 2 );
-        $self->access_tier( $map{ lc $arg } );
-    }
-
-    my $index = $self->access_tier;
-    my @arr = (qw/standard business enterprise/);
-    return $arr[$index];
-}
-
-sub superadmin_appuser {
-    my $self = shift;
-    my $admin_appuser_role =
-        $self->client_appuser_roles->search( { role_id => $self->SuperAdmin() },
-        { rows => 1 } )->first;
-    return unless $admin_appuser_role;
-    return $admin_appuser_role->appuser;
-}
-
-sub billing_contact_appuser {
-    my $self = shift;
-    my $role =
-        $self->client_appuser_roles->search( { 'name' => 'billing contact' },
-        { 'prefetch' => 'role', 'rows' => 1 } )->single;
-    return unless $role;
-    return $role->appuser;
-
-}
-
-# can only have one at a time.
-# all monthly orders should have the same anniversary
-sub monthly_billing_anniversary {
-    my $self = shift;
-    my @bt_orders = $self->braintree_orders->search({ is_monthly => 1 });
-    if (@bt_orders && @bt_orders > 0) {
-        return $bt_orders[0]->anniversary_date->day;
-    } else {
-        my @gc_orders = $self->google_checkout_orders->search({ is_monthly => 1 });
-        if (@gc_orders && @gc_orders > 0) {
-            return $gc_orders[0]->anniversary_date->day;
-        }
-    }
-
-    return undef;
-}
-
-# since company names are optional, wrap the accessor and return
-# the name of the superadmin user if needed
-sub company { 
-    my $self = shift;
-
-    return $self->_company( @_ ) if @_;
-
-    my $comp = $self->_company;
-    return $comp if defined $comp && $comp =~ m{\w};
-
-    my $user = $self->superadmin_appuser;
-    return '' unless $user;
-
-    return $user->full_name;
-}
-
-sub default_card {
-    my $self = shift;
-    return unless $self->credit_cards;
-    return $self->credit_cards->search({ is_default => 'true', is_active => 'true' })->single;
-}
-
-sub add_appuser {
-    my ( $self, $appuser_hash ) = @_;
-    my $schema  = $self->result_source->schema;
-    my $guard   = $schema->txn_scope_guard;
-    my $appuser = $self->add_to_appusers($appuser_hash);
-    for ( $self->SuperAdmin(), $self->LeadContact(), $self->BillingContact() ) {
-        my $rs = $self->client_appuser_roles;
-        $rs->count( { role_id => $_ } )
-            or $rs->create( { appuser_id => $appuser->id, role_id => $_ } );
-    }
-    $self->client_config_parameters->create( {
-            config_parameter_id =>
-                $schema->config_param_by_name->{"Client::receipt_recipients"}
-                ->{config_parameter_id},
-            value => $appuser->email
-        } );
-
-    $guard->commit;
-    return $appuser;
-}
+#......
 1;
 
 ----perl
@@ -762,339 +297,75 @@ has_many(
     'client_id'
 );
 
-has_many(
-    client_services => '::ClientService',
-    'client_id'
-);
-
-has_many(
-    appuser_client_services =>
-        '::AppuserClientService',
-    'client_id'
-);
-has_many(
-    content_queues => '::ContentQueue',
-    'client_id'
-    );
-
-has_many(
-    email_transactions =>
-        '::EmailTransaction',
-    'client_id'
-);
-might_have(
-    lead => '::SalesforceClientLead',
-    'client_id'
-    );
-
-has_many(
-    credit_cards => '::ClientCreditCard',
-    'client_id'
-);
-
-might_have(
-    billing_address => '::BillingAddress',
-    'client_id'
-    );
-
-has_many(
-    receipts => '::Receipt',
-    'client_id'
-    );
-
-has_many(
-    opportunities => '::SalesforceOpportunity',
-    'client_id'
-    );
-
-has_many(
-    api_consumers =>
-        '::APIConsumer',
-        'client_id'
-    );
-
-has_many(
-    feed_sources => '::FeedSource', 'client_id'
-);
-
-has_many(
-    braintree_orders => '::BraintreeOrder',
-    'client_id',
-    );
-
-has_many(
-    groups => "::ClientGroup", 'client_id'
-);
-
-has_many(
-    client_service_groups => '::ClientServiceGroup', 'client_id'
-);
-
-has_many(
-    client_group_appusers => '::ClientGroupAppuser', 'client_id'
-);
-has_many(
-    client_config_parameters =>
-        '::ClientConfigParameter',
-    'client_id'
-);
-many_to_many(
-    config_parameters => 'client_config_parameters', 'config_parameter'
-);
-
-has_many(
-    content_sources => '::ContentSource',
-    'client_id'
-);
-
-might_have(
-    bitly_credential_client => '::BitlyCredentialClient',
-    'client_id'
-    );
-
-has_many(
-    bitly_credentials => '::BitlyCredential',
-    'client_id'
-);
-
-might_have(
-    googl_credential_client => '::GooglCredentialClient',
-    'client_id'
-    );
-
-has_many(
-    googl_credentials => '::GooglCredential',
-    'client_id'
-);
-might_have(
-    trial_period => '::ClientTrialPeriod',
-    'client_id'
-);
-
-has_many(
-    promo_codes => '::ClientPromoCode',
-    'client_id'
-);
-
-has_many(
-    report_links => '::ReportLink',
-    'client_id'
-);
-
-might_have(
-    tribal_client => '::TribalClient',
-    'client_id'
-);
-
-has_many(
-    tribal_client_services => '::TribalClientService',
-    'client_id'
-);
-
-might_have(
-    tribal_credential_client => '::TribalCredentialClient',
-    'client_id'
-);
-
-has_many(
-    tribal_credentials => '::TribalCredential',
-    'client_id'
-);
-
-has_many(
-    client_socialflow_products =>
-    '::ClientSocialFlowProduct',
-    'client_id'
-);
-
-has_many(
-    client_performance_reports =>
-    '::ClientPerformanceReport',
-    'client_id'
-);
-
-has_many(
-    attention_accounts => '::Attention::Account', 'client_id'
-);
-
-has_many(
-    subscriptions => '::BTSubscription',
-    'client_id'
-);
-
-has_many tracker_groups => '::TrackerGroup', 'client_id';
-
-has_many rulesets => '::TrackerClientRuleSet', 'client_id';
-
-might_have attention_client_budget => '::Attention::ClientBudget', 'client_id';
-
-has_many attention_account_budgets => '::Attention::AccountBudget', 'client_id';
-
-has_many
-  attention_ad_campaign_set_budgets => '::Attention::AdCampaignSetBudget',
-  'client_id';
-
-has_many
-  attention_ad_campaign_budgets => '::Attention::AdCampaignBudget',
-  'client_id';
-
-has_many
-  attention_client_transactions => '::Attention::ClientTransaction',
-  'client_id';
-
-has_many command_centers => '::CommandCenter', 'client_id';
-
-has_many client_labels => '::ClientLabel', 'client_id';
-
-has_many client_socialflow_sites => '::ClientSocialFlowSite', 'client_id';
-
-has_many socialflow_site => '::SocialFlowSite', 'site_id';
-
-many_to_many socialflow_sites => 'client_socialflow_sites', 'socialflow_site';
-
-sub Active {
-    return +{
-        0 => 'lead',
-        1 => 'active',
-        2 => 'canceled',
-        3 => 'suspended',
-        4 => 'opt-in expired',
-    };
-}
-
-sub ActiveValues() {
-    state $lookup = { reverse %{Active()} };
-    $lookup;
-}
-
-sub status {
-    my $self = shift;
-    return Active->{$self->_active};
-}
-
-sub is_active {
-    my ($self) = @_;
-    $self->_active == ActiveValues->{'active'};
-}
-
-sub set_status {
-    my ($self, $desired) = @_;
-
-    my $codes = ActiveValues();
-
-    exists $codes->{$desired} or croak "Unknown client status $desired";
-
-    $self->_active($codes->{$desired});
-}
-
-sub social_accounts_left {
-    my ($self) = @_;
-
-    # 0 means unlimited. The easiest way to express this in perl is +Infinity.
-    # Is this the best value to return? Makes sense for comparisons, but maybe
-    # not if its displayed directly.
-    return "Inf" if $self->max_social_accts == 0;
-
-    my $total_accounts = $self->client_services->active_publishing_accounts->valid;
-    my $limit = $self->max_social_accts;
-    return $limit - $total_accounts;
-}
-
-sub tier {
-    my $self = shift;
-
-    if ( my $arg = shift ) {
-        my %map = ( standard => 0, business => 1, enterprise => 2 );
-        $self->access_tier( $map{ lc $arg } );
-    }
-
-    my $index = $self->access_tier;
-    my @arr = (qw/standard business enterprise/);
-    return $arr[$index];
-}
-
-sub superadmin_appuser {
-    my $self = shift;
-    my $admin_appuser_role =
-        $self->client_appuser_roles->search( { role_id => $self->SuperAdmin() },
-        { rows => 1 } )->first;
-    return unless $admin_appuser_role;
-    return $admin_appuser_role->appuser;
-}
-
-sub billing_contact_appuser {
-    my $self = shift;
-    my $role =
-        $self->client_appuser_roles->search( { 'name' => 'billing contact' },
-        { 'prefetch' => 'role', 'rows' => 1 } )->single;
-    return unless $role;
-    return $role->appuser;
-
-}
-
-# since company names are optional, wrap the accessor and return
-# the name of the superadmin user if needed
-sub company {
-    my $self = shift;
-
-    return $self->_company( @_ ) if @_;
-
-    my $comp = $self->_company;
-    return $comp if defined $comp && $comp =~ m{\w};
-
-    my $user = $self->superadmin_appuser;
-    return '' unless $user;
-
-    return $user->full_name;
-}
-
-sub default_card {
-    my $self = shift;
-    return unless $self->credit_cards;
-    return $self->credit_cards->search({ is_default => 'true', is_active => 'true' })->single;
-}
-
-sub add_appuser {
-    my ( $self, $appuser_hash ) = @_;
-    my $schema  = $self->result_source->schema;
-    my $guard   = $schema->txn_scope_guard;
-    my $appuser = $self->add_to_appusers($appuser_hash);
-    for ( $self->SuperAdmin(), $self->LeadContact(), $self->BillingContact() ) {
-        my $rs = $self->client_appuser_roles;
-        $rs->count( { role_id => $_ } )
-            or $rs->create( { appuser_id => $appuser->id, role_id => $_ } );
-    }
-    $self->client_config_parameters->create( {
-            config_parameter_id =>
-                $schema->config_param_by_name->{"Client::receipt_recipients"}
-                ->{config_parameter_id},
-            value => $appuser->email
-        } );
-
-    $guard->commit;
-    return $appuser;
-}
-
-sub get_client_shortener {
-    my $self = shift;
-    return unless $self->tribal_credential_client;
-    return $self->tribal_credential_client;
-}
-
-sub get_bitly_creds {
-    my $self = shift;
-    return unless $self->bitly_credential_client;
-    return $self->bitly_credential_client;
-}
-
-sub get_googl_creds {
-    my $self = shift;
-    return unless $self->googl_credential_client;
-    return $self->googl_credential_client;
-}
+#......
 
 1;
 
+---- perl
+
+package SocialFlow::Schema::ResultBase;
+use strictures 1;
+#use Devel::SimpleTrace;
+use DBIx::Class::Candy ();
+use Import::Into;
+use SocialFlow::Schema::Util ();
+#use boolean ();
+use Carp ();
+use Safe::Isa;
+use Data::Dumper::Concise;
+use List::Util qw(first);
+
+
+sub _schema_specific_components {
+    my $class = shift;
+    ## This should be implemented by the child if any additional
+    # components must be loaded by all result classes
+    return ();
+} 
+
+sub _default_result_namespace {
+    my $class = shift;
+    ## Override if you want, reasonable default
+    return sub () { $class->_schema_class . '::Result' };
+}
+
+sub _schema_class {
+    die "_schema_class must be implemented by child class";
+}
+
+sub _candy_components {
+    my($class,$params) = @_;
+    my @imports = qw[
+      TimeStamp
+      +SocialFlow::Schema::Util
+      Helper::Row::RelationshipDWIM
+      Helper::Row::ProxyResultSetMethod
+      ];
+    push (@imports, $class->_schema_specific_components);
+    if( $params->{extra_components} ) {
+        push( @imports, @{ delete $params->{extra_components} } );
+    }
+    return \@imports;
+}
+
+sub import {
+    my ( $class, $params ) = @_;
+    my $target = caller;
+    strictures->import::into($target,1);
+    indirect->import::into($target);
+    DBIx::Class::Candy->import::into( $target,
+        -components => $class->_candy_components($params), );
+    #boolean->import::into($target);
+    Carp->import::into($target);
+    Data::Dumper::Concise->import::into($target);
+    Safe::Isa->import::into($target);
+    {
+        #For https://metacpan.org/module/DBIx::Class::Helper::Row::RelationshipDWIM
+        no strict 'refs';
+        no warnings 'once';
+        *{"$target\::default_result_namespace"} = $class->_default_result_namespace;
+    }
+}
 
 ----perl
 package SocialFlow::Schema::Util;
@@ -1250,83 +521,18 @@ as listed above.
 
 =cut
 
-----perl
-
-package SocialFlow::Schema::ResultBase;
-use strictures 1;
-#use Devel::SimpleTrace;
-use DBIx::Class::Candy ();
-use Import::Into;
-use SocialFlow::Schema::Util ();
-#use boolean ();
-use Carp ();
-use Safe::Isa;
-use Data::Dumper::Concise;
-use List::Util qw(first);
-
-
-sub _schema_specific_components {
-    my $class = shift;
-    ## This should be implemented by the child if any additional
-    # components must be loaded by all result classes
-    return ();
-} 
-
-sub _default_result_namespace {
-    my $class = shift;
-    ## Override if you want, reasonable default
-    return sub () { $class->_schema_class . '::Result' };
-}
-
-sub _schema_class {
-    die "_schema_class must be implemented by child class";
-}
-
-sub _candy_components {
-    my($class,$params) = @_;
-    my @imports = qw[
-      TimeStamp
-      +SocialFlow::Schema::Util
-      Helper::Row::RelationshipDWIM
-      Helper::Row::ProxyResultSetMethod
-      ];
-    push (@imports, $class->_schema_specific_components);
-    if( $params->{extra_components} ) {
-        push( @imports, @{ delete $params->{extra_components} } );
-    }
-    return \@imports;
-}
-
-sub import {
-    my ( $class, $params ) = @_;
-    my $target = caller;
-    strictures->import::into($target,1);
-    indirect->import::into($target);
-    DBIx::Class::Candy->import::into( $target,
-        -components => $class->_candy_components($params), );
-    #boolean->import::into($target);
-    Carp->import::into($target);
-    Data::Dumper::Concise->import::into($target);
-    Safe::Isa->import::into($target);
-    {
-        #For https://metacpan.org/module/DBIx::Class::Helper::Row::RelationshipDWIM
-        no strict 'refs';
-        no warnings 'once';
-        *{"$target\::default_result_namespace"} = $class->_default_result_namespace;
-    }
-}
-
+----
 
 == Company CPAN
 
 * Dependencies are mixed with regular cpan deps:
     ex: SocialFlow::Performance = 1.2
 
----- center
-
 CPAN::Mini + CPAN::Mini::Inject
 
 +* had problems with CPAN::Mini not mirroring stuff properly
+
+* Pinto didn't exist yet
 
 +* an mst bash script:
 
@@ -1420,9 +626,113 @@ foreach my $added (@added) {
 }
 $mcpani->writelist;
 
+---- perl
+use strictures 1;
 
+package Dist::Zilla::Plugin::SocialFlow::Release;
+use Moose;
+use Path::Class ();
+use File::Copy  ();
+use Git::Wrapper;
+use Net::OpenSSH;
+use File::HomeDir::PathClass;
 
-== Sam Kaufman
+with 'Dist::Zilla::Role::Releaser';
 
-* twitter.com/edibleenergy
-* github.com/ediblenergy
+# ABSTRACT: Releases modules into the SocialFlow minicpan mirror
+
+has ssh => (
+  is      => "ro",
+  isa     => "Net::OpenSSH",
+  lazy    => 1,
+  default => sub { Net::OpenSSH->new('mcpani@devdb') }
+);
+
+has config => (
+  is      => "ro",
+  isa     => "Path::Class::File",
+  lazy    => 1,
+  default => sub {
+    File::HomeDir::PathClass->home->file('.sfcpanrc');
+  }
+);
+
+has mcpan_repo => (
+  is => 'ro',
+  isa => 'Path::Class::Dir',
+  lazy_build => 1
+);
+
+has git => (
+  is      => "ro",
+  isa     => "Git::Wrapper",
+  lazy    => 1,
+  default => sub { Git::Wrapper->new( shift->mcpan_repo ) }
+);
+
+sub _build_mcpan_repo {
+  my ($self) = @_;
+my $s = $self->config->stat  ? $self->config->slurp : undef;
+  return defined($s)
+    && length($s)
+    ? Path::Class::dir($s)
+    : File::HomeDir::PathClass->home->subdir('SocialFlowCPAN');
+}
+
+sub release {
+  my ( $self, $tarball ) = @_;
+  $self->git->pull({rebase => 1});
+  $self->copy_to_mcpan_repo($_), $self->git->add("dists/$_") for $tarball;
+  $self->git->fetch;
+  $self->git->commit( { message => "[RELEASE] $tarball" } );
+  $self->git->push(qw[origin HEAD]);
+#  $self->git->push('--tags');
+#  $self->ssh_add_dist($tarball);
+}
+
+sub copy_to_mcpan_repo {
+  my ( $self, $tarball ) = @_;
+  my $target = $self->mcpan_repo->subdir('dists');
+  File::Copy::copy( $tarball, $target->stringify )
+    or die "Couldn't release $tarball: $!";
+}
+
+sub ssh_add_dist {
+  my ( $self, $tarball ) = @_;
+  $self->ssh->system("add_dist $tarball");
+}
+
+1;
+
+----
+
+ØMQ ( zeromq )
+
+Read more at http://www.zeromq.org/ but careful of the koolaid
+
+---- perl
+
+use strictures 1;
+use JSON::XS;
+use SocialFlow::Reporting::Schema;
+use aliased 'SocialFlow::Web::Config::Cached' => 'SFConfig';
+use aliased 'SocialFlow::Reporting::Daemon::Timeline::Item::Facebook' =>
+  'TimelineItem';
+use ZMQ;
+use ZMQ::Constants qw[ZMQ_PUB ZMQ_SUB ZMQ_SUBSCRIBE];
+use Data::Dumper::Concise;
+my $cfg = SFConfig->config;
+my $schema = SocialFlow::Reporting::Schema->connect($cfg->{reporting}{db});
+
+my $ctx = ZMQ::Context->new(5);
+my $subscriber = $ctx->socket( ZMQ_SUB );
+$subscriber->connect("tcp://facebook-1:5500");
+$subscriber->setsockopt(ZMQ_SUBSCRIBE, "");
+while ( my $msg = $subscriber->recv ) {
+    my $obj = decode_json( $msg->data );
+    unless( $obj->{created_time} && ( $obj->{message} || $obj->{description} ) ) {
+        next;
+    }
+    my $ti = TimelineItem->new( %$obj, sf_reporting => $schema );
+    $ti->run;
+}

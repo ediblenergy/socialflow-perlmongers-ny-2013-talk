@@ -26,7 +26,7 @@
 
      http://www.youtube.com/watch?v=eoNw5jmKvB8 #mst the __END__ of everything
 
-     ssh $host | perl -
+     cat fatpacked_script.pl | ssh $host perl -
 
      System::Introspector
 

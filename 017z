@@ -1,0 +1,62 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                                               Company CPAN
+
+     * Dependencies are mixed with regular cpan deps:
+         ex: SocialFlow::Performance = 1.2
+
+     CPAN::Mini + CPAN::Mini::Inject
+
+     * had problems with CPAN::Mini not mirroring stuff properly
+
+     * an mst bash script:
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

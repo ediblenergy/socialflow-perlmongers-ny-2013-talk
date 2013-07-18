@@ -61,9 +61,3 @@
              *{"$target\::default_result_namespace"} = $class->_default_result_namespace;
          }
      }
-
-
-                                           Company CPAN
-
-     * Dependencies are mixed with regular cpan deps:
-         ex: SocialFlow::Performance = 1.2

@@ -7,6 +7,9 @@
 
 
 
+
+
+
      #!/usr/bin/env perl
      use strictures 1;
      use CPAN::Mini::Inject;
@@ -45,10 +48,7 @@
 
 
 
-                                           Sam Kaufman
 
-     * twitter.com/edibleenergy
-     * github.com/ediblenergy
 
 
 
