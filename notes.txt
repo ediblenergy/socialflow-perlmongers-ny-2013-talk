@@ -2,13 +2,11 @@
            -- Slide 1 --
 
 
-<Space>
-
 
 <Space>    -- Slide 2 --
 
+Its hard to play down the role CPAN has played in the development of SocialFlow.
 
-<Space>
 
 
 <Space>    -- Slide 3 --
@@ -29,8 +27,10 @@
 
 <Space>    -- Slide 7 --
 
-Its hard to play down the role CPAN has played in the development of SocialFlow.
 
+<Space>
+
+<Space>
 
 
 <Space>    -- Slide 8 --
@@ -52,8 +52,6 @@ Its hard to play down the role CPAN has played in the development of SocialFlow.
 <Space>    -- Slide 12 --
 
 
-<Space>
-
 
 <Space>    -- Slide 13 --
 
@@ -64,13 +62,5 @@ Its hard to play down the role CPAN has played in the development of SocialFlow.
 
 
 <Space>    -- Slide 15 --
-
-
-
-<Space>    -- Slide 16 --
-
-
-
-<Space>    -- Slide 17 --
 
 

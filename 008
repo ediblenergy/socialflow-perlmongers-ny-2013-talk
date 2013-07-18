@@ -25,11 +25,11 @@
 
 
 
-                                                            Database
+                                 Some cool stuff SocialFlow does, with DBIx::Class
 
-     * DBIx::Class
-     * ZMQ
-     * Redis
+     * Separate CPAN dists for (DBIx::Class::)Schemas
+     * Import::Into
+     * DBIx::Class::Candy
 
 
 

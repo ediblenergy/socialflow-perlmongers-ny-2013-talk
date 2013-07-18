@@ -13,7 +13,7 @@ auto_size: 1
 # height: 18
 # width: 69
 vim_opts: '-u NONE'
-skip: 0
+colorscheme: jellybeans
 
 # The following options are for Gvim usage.
 # vim: gvim
@@ -24,39 +24,20 @@ skip: 0
 #   set guicursor=a:blinkon0-ver25-Cursor
 #   colorscheme default
 
----- center
-SocialFlow
+---- 
 
-* From 20_000 feet
+SocialFlow - A brief rundown of our most interesting ( to me ) perl projects
 
-+* by Samuel Kaufman
+* NY Perl Mongers ( http://www.meetup.com/The-New-York-Perl-Meetup-Group/ )
 
-----
+* July 18, 2013
+
+---- skip
 "If I have seen further it is by standing on the shoulders of giants."
 - Isaac Newton
 
 + "Good artists copy; great artists steal"
 - Steve Jobs, missatributing a quote to Pablo Picasso
-
-----
-
-== A bit about myself
-
-----python,i4
-# Python
-for task in job.getTasks():
-    self.reinvent(wheel)
-
-----php,i4
-
-<?php
-    $request = $_GET["business_request"];
-    for($hour = 9; $hour <= 18; $hour++) {
-        beat_code_with_stick_until_it_doesnt_show_whitescreen_of_death($request);
-    }
-
-?>
-----ruby,i4
 
 ----perl,i4
 
@@ -110,7 +91,8 @@ Its hard to play down the role CPAN has played in the development of SocialFlow.
 
 * Imitate perl Open Source standards
 +* Internal CPAN
-* A repo for every distro ( with tests! Sometimes!! )
+* A repo for every distro (with tests! ...
++ Sometimes!! )
 ----
 
 == Some cool stuff SocialFlow does, with DBIx::Class
@@ -1300,3 +1282,36 @@ sub _sqlt_deploy_hook {
 
 =head1 NAME
 Parent class that schema specific ::ResultBase classes are children of. Sets up DBIx candy and imports other useful modules into dbix result classes
+
+----
+
+== Algorithm::Dablooms
+
+* "A Bloom filter, conceived by Burton Howard Bloom in 1970 is a space-efficient probabilistic data structure that is used to test whether an element is a member of a set. False positive matches are possible, but false negatives are not." -  http://en.wikipedia.org/wiki/Bloom_filter
+
+*  Bitly Dablooms: "This project aims to demonstrate a novel bloom filter implementation that can scale, and provide not only the addition of new members, but reliable removal of existing members." - https://github.com/bitly/dablooms
+
+
+----perl
+
+my $id = 0;
+my $bloom = Algorithm::Dablooms->new({
+    capacity => 20_000,
+    error_rate => 0.05,
+    filename => $bloom_file,
+});
+
+#...
+
+$bloom->add("Sam Kaufman", ++$id);
+
+#later
+
+$bloom->contains( $entity );
+
+----
+
+== Sam Kaufman
+
+* twitter.com/edibleenergy
+* github.com/ediblenergy
