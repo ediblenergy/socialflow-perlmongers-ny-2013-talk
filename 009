@@ -1,0 +1,62 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                               sfs3
+
+     [10:26] <edibsk> hey paul, I'm doing a perlmongers ny.pm talk tonight about interesting perl projects at SocialFlow, I was thinking of briefly covering sfs3
+     [10:27] <edibsk> so from a high level, is it a tool to parallelize uploads to s3, and can do multipart uploads concurrently on the same file?
+     [10:29] <LeoNerd> Yes and no...
+     [10:29] <LeoNerd> It's a tool to do parallel uploads, but it can't do concurrent uploads of multiple parts -within- one file
+     [10:29] <LeoNerd> It's a massive pain to deal with S3, so there's lots of limitations
+     [10:30] <LeoNerd> The primary thing that sfs3 does is allows storing of per-file metadata, so we can store the whole-file md5sum on S3 itself; something that has been hitherto literally impossible
+     #....
+     10:35] <LeoNerd> S3 _does not_ give you a whole-file md5sum for multipart files. Not at all
+     [10:35] <LeoNerd> Nor, once it is uploaded, does S3 give you any way to get the etags of the pieces.
+     [10:35] <LeoNerd> So what sfs3 does is stores data in a subspace called data/ and extra metadata in a space called meta/. One item of metadata is a tiny text file just containing the md5sum in nice easy ASCII
+     [10:36] <LeoNerd> The reason it does that, rather than storing x-aws-meta-md5sum is that S3 does not give you _any_ way to set the metadata at the end.. only before you start
+     [10:36] <LeoNerd> But if you're uploading a 20GB file you don't want to read it once off disk just to calculate the md5sum, before you read it a second time to upload it.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

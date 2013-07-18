@@ -32,76 +32,158 @@ SocialFlow - A brief rundown of our most interesting ( to me ) perl projects
 
 * July 18, 2013
 
----- skip
-"If I have seen further it is by standing on the shoulders of giants."
-- Isaac Newton
+----
 
-+ "Good artists copy; great artists steal"
-- Steve Jobs, missatributing a quote to Pablo Picasso
+Social Media optimization for media companies ( newspapers, magazines, etc ) and brands
 
-----perl,i4
+Cadence - for earned media
 
-sub solve_for_business_request {
-    my($self,$request) = @_;
-    return $self->search_metacpan_for($request)
-        || die "beats me";
-}
+Forte - for boosting earned media with paid
 
+Crescendo - for paid media
 
-====
-Its hard to play down the role CPAN has played in the development of SocialFlow.
+Facebook & Twitter
 
 ----
-== Database
+
+SocialFlow's CPAN stack:
+
+Database
 
 * DBIx::Class
-* ZMQ
 * Redis
+* ZMQ
 
-----
-== 3rd party 
-
-* Net::Twitter
-* Facebook::Graph
-* Web::Scraper
-
-----
-
-== Web Development
+Web Development
 
 * Catalyst
 * Plack
 * Starman
 
-----
+3rd party 
 
-== Toolchain
+* Net::Twitter
+* Facebook::Graph
+* Web::Scraper
+
+Toolchain
 
 * Dist::Zilla
 * Devel::Local
 * Object::Remote
+* System::Introspector
 * App::Nopaste
 * App::GitGot
+* App::Ack
 * Reply
 * App::cpanminus
 
 ----
 
-== Some cool stuff SocialFlow does
+== Some stuff SocialFlow (and SocialFlow sponsored ) projects
 
-* Imitate perl Open Source standards
-+* Internal CPAN
-* A repo for every distro (with tests! ...
-+ Sometimes!! )
+* Object::Remote
+* System::Introspector
+* Alorithm::Dablooms
+* sfs3
+
 ----
 
-== Some cool stuff SocialFlow does, with DBIx::Class
+== Some useful stuff SocialFlow uses 
 
-* Separate CPAN dists for (DBIx::Class::)Schemas
-* Import::Into
 * DBIx::Class::Candy
+* Import::Into
+* Company CPAN
+* ZMQ
+* Thrift
+
+----
+
+Object::Remote - https://metacpan.org/module/Object::Remote
+
+http://www.youtube.com/watch?v=eoNw5jmKvB8 #mst the __END__ of everything
+
+ssh $host | perl -
+
++System::Introspector
+
+https://github.com/SocialFlowDev/System-Introspector/tree/checkpoint_sf/lib/System/Introspector/Probe
+
+http://wiki.socialflow.com:8080/wiki/System:log2.priv.sf#Listening_sockets_for_log2.priv.sf
+
+----center
+
+Algorithm::Dablooms
+
+"A Bloom filter, conceived by Burton Howard Bloom in 1970 is a space-efficient probabilistic data structure that is used to test whether an element is a member of a set. False positive matches are possible, but false negatives are not." -  http://en.wikipedia.org/wiki/Bloom_filter
+
+Bitly Dablooms: "This project aims to demonstrate a novel bloom filter implementation that can scale, and provide not only the addition of new members, but reliable removal of existing members." - https://github.com/bitly/dablooms
 
 ----perl
+
+my $id = 0;
+my $bloom = Algorithm::Dablooms->new({
+    capacity => 20_000,
+    error_rate => 0.05,
+    filename => $bloom_file,
+});
+
+#...
+
+$bloom->add("Grand Duchess Anastasia Nikolaevna of Russia", ++$id);
+
+#later
+
+$bloom->contains( "Grand Duchess Anastasia Nikolaevna of Russia" ); #its true!
+
+----
+
+== sfs3
+
+[10:26] <edibsk> hey paul, I'm doing a perlmongers ny.pm talk tonight about interesting perl projects at SocialFlow, I was thinking of briefly covering sfs3
+[10:27] <edibsk> so from a high level, is it a tool to parallelize uploads to s3, and can do multipart uploads concurrently on the same file?
+[10:29] <LeoNerd> Yes and no...
+[10:29] <LeoNerd> It's a tool to do parallel uploads, but it can't do concurrent uploads of multiple parts -within- one file
+[10:29] <LeoNerd> It's a massive pain to deal with S3, so there's lots of limitations
+[10:30] <LeoNerd> The primary thing that sfs3 does is allows storing of per-file metadata, so we can store the whole-file md5sum on S3 itself; something that has been hitherto literally impossible
+#....
+10:35] <LeoNerd> S3 _does not_ give you a whole-file md5sum for multipart files. Not at all
+[10:35] <LeoNerd> Nor, once it is uploaded, does S3 give you any way to get the etags of the pieces.
+[10:35] <LeoNerd> So what sfs3 does is stores data in a subspace called data/ and extra metadata in a space called meta/. One item of metadata is a tiny text file just containing the md5sum in nice easy ASCII
+[10:36] <LeoNerd> The reason it does that, rather than storing x-aws-meta-md5sum is that S3 does not give you _any_ way to set the metadata at the end.. only before you start
+[10:36] <LeoNerd> But if you're uploading a 20GB file you don't want to read it once off disk just to calculate the md5sum, before you read it a second time to upload it.
+
+----
+
+Thrift
+
+"The Apache Thrift software framework, for scalable cross-language services development, combines a software stack with a code generation engine to build services that work efficiently and seamlessly between C++, Java, Python, PHP, Ruby, Erlang, Perl, Haskell, C#, Cocoa, JavaScript, Node.js, Smalltalk, OCaml and Delphi and other languages."
+
+--http://thrift.apache.org/
+
+Things that use Thrift:
+* Cassandra
+* Hypertable
+* HBase
+* ElasticSearch
+
+---- perl
+
+use Hypertable::ThriftClient;
+my $ht = Hypertable::ThriftClient->new($master, $port);
+my $ns = $ht->namespace_open($namespace);
+#...
+my $users_mutator = $ht->mutator_open($ns, 'users', $ignore_unknown_cfs, 10);
+#...
+
+my $keys = new Hypertable::ThriftGen::Key({ row => $row, column_family => $cf, column_qualifier => $cq });
+my $cell = new Hypertable::ThriftGen::Cell({key => $keys, value => $val});
+$ht->mutator_set_cell($mutator, $cell);
+$ht->mutator_flush($mutator);
+$ht->mutator_close($users_mutator);
+
+----perl
+
 use strict;
 use warnings;
 
@@ -1166,6 +1248,7 @@ skaufman@socialflow.com
 Copyright (c) %s the %s L</AUTHOR> and L</CONTRIBUTORS>
 as listed above.
 
+=cut
 
 ----perl
 
@@ -1230,86 +1313,114 @@ sub import {
         no strict 'refs';
         no warnings 'once';
         *{"$target\::default_result_namespace"} = $class->_default_result_namespace;
-
-        *{"$target\::sqlt_deploy_hook"} =
-          _sqlt_deploy_hook( $class->_schema_class )
-          unless *{"$target\::sqlt_deploy_hook"};
     }
 }
 
 
-# Installed into the source at import time
-sub _sqlt_deploy_hook {
-    my $schema_class = shift;
-    return sub() {
-        my ( $source, $sqlt_table ) = @_;
+== Company CPAN
 
-        # check for renamed constraints
-        for my $rel ( $source->relationships ) {
+* Dependencies are mixed with regular cpan deps:
+    ex: SocialFlow::Performance = 1.2
 
-            my $rel_info = $source->relationship_info($rel);
+---- center
 
-            next unless $rel_info->{attrs}{constraint_name};
+CPAN::Mini + CPAN::Mini::Inject
 
-            unless ( ref $source ) {
-                $source = $schema_class->source($source);
-            }
++* had problems with CPAN::Mini not mirroring stuff properly
 
-            # Work out the old constraint name
-            my $relsource = $source->related_source($rel);
-            my $idx;
-            my %other_columns_idx =
-              map { 'foreign.' . $_ => ++$idx } $relsource->columns;
-            my @cond =
-              sort { $other_columns_idx{$a} cmp $other_columns_idx{$b} }
-              keys( %{ $rel_info->{cond} } );
-            my @keys = map { $rel_info->{cond}->{$_} =~ /^\w+\.(\w+)$/ } @cond;
++* an mst bash script:
 
-            my $old_name = join( '_', $source->name, 'fk', @keys );
+---- sh
+#!/bin/sh
 
-            my ($c) = first {
-                $_->type eq SQL::Translator::Schema::Constants::FOREIGN_KEY()
-                  && $_->name eq $old_name;
-            }
-            $sqlt_table->get_constraints;
+set -e
 
-            $c->name( $rel_info->{attrs}{constraint_name} );
-        }
-    };
+# Dumbass minicpan replacement - Matt S Trout 2005/6. Perl license.
+
+# Pick one from http://cpan.org/SITES.html#RSYNC
+#rsync://mirrors.ibiblio.org/CPAN/
+REMOTEHOST=${REMOTEHOST-'mirror.cogentco.com'}
+REMOTEPREFIX=${REMOTEPREFIX-'CPAN'}
+
+# Can override mirror dir by putting it as first argument on command line
+LOCAL=${1-/home/mcpani/mirror}
+
+cd $LOCAL
+
+mkdir -p work authors/id modules
+
+rsync $REMOTEHOST::"$REMOTEPREFIX/modules/03modlist.data.gz $REMOTEPREFIX/modules/02packages.details.txt.gz" modules/
+rsync $REMOTEHOST::"$REMOTEPREFIX/authors/01mailrc.txt.gz" authors/
+
+zcat modules/02packages.details.txt.gz \
+    | egrep '\.(tar\.gz|tgz|zip)$' \
+    | egrep -v '/((perl-|parrot-|ponie-)[0-9]|perl5\.004)' \
+    | awk '{print $3}' \
+    | sort -u >work/targets.dists
+
+cat work/targets.dists \
+    | cut -d'/' -f1-3 \
+    | sort -u \
+    | perl -pe 's!$!/CHECKSUMS!;' >work/targets.checksums
+
+cat work/targets.dists \
+    | perl -pe 's!/[^/]+$!\n!;' >work/targets.dirs
+
+cd $LOCAL/authors/id
+
+cat $LOCAL/work/targets.dirs | xargs -n100 mkdir -p
+
+cat $LOCAL/work/targets.checksums | xargs -n100 touch
+
+cat $LOCAL/work/targets.dists | xargs -n100 touch
+
+cd $LOCAL
+
+rsync -vr --size-only --existing $REMOTEHOST::"$REMOTEPREFIX/authors/" authors/
+
+find authors/id -name '*.*' | perl -pe 's!^authors/id/!!;' | sort -u >work/tree.all
+
+sort -u work/targets.* | comm -13 - work/tree.all | perl -pe 's!^!authors/id/!;' | xargs --no-run-if-empty rm -v
+
+---- perl
+
+#!/usr/bin/env perl
+use strictures 1;
+use CPAN::Mini::Inject;
+use 5.10.0;
+my $mcpani = CPAN::Mini::Inject->new;
+my $file = $ARGV[0] or die "$@ $!";
+my $cfg = $mcpani->config_class->new;
+for (
+    [ 'local',      '/home/mcpani/mirror' ],
+    [ 'repository', '/home/mcpani/SocialFlowCPAN/dists' ],
+    [ 'dirmode',    '0755' ]
+  )
+{
+    $cfg->set( $_->[0], $_->[1] );
 }
+$mcpani->config($cfg);
+$mcpani->readlist;
 
-1;
+$mcpani->add(
+    authorid => "SOCIALFLOW",
+    file     => $file
+);
 
-=head1 NAME
-Parent class that schema specific ::ResultBase classes are children of. Sets up DBIx candy and imports other useful modules into dbix result classes
+my @added = $mcpani->added_modules;
+foreach my $added (@added) {
+    print "\nAdding File: $added->{file}\n";
+    print "Author ID: $added->{authorid}\n";
+    my $modules = $added->{modules};
+    foreach my $mod ( sort keys %$modules ) {
+        print "Module: $mod\n";
+        print "Version: $modules->{$mod}\n";
+    }
+    print "To repository: $mcpani->{config}{repository}\n\n";
+}
+$mcpani->writelist;
 
-----
 
-== Algorithm::Dablooms
-
-* "A Bloom filter, conceived by Burton Howard Bloom in 1970 is a space-efficient probabilistic data structure that is used to test whether an element is a member of a set. False positive matches are possible, but false negatives are not." -  http://en.wikipedia.org/wiki/Bloom_filter
-
-*  Bitly Dablooms: "This project aims to demonstrate a novel bloom filter implementation that can scale, and provide not only the addition of new members, but reliable removal of existing members." - https://github.com/bitly/dablooms
-
-
-----perl
-
-my $id = 0;
-my $bloom = Algorithm::Dablooms->new({
-    capacity => 20_000,
-    error_rate => 0.05,
-    filename => $bloom_file,
-});
-
-#...
-
-$bloom->add("Sam Kaufman", ++$id);
-
-#later
-
-$bloom->contains( $entity );
-
-----
 
 == Sam Kaufman
 

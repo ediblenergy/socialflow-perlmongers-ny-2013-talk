@@ -24,13 +24,13 @@
 
 
 
+                                Some useful stuff SocialFlow uses
 
-                                                  Web Development
-
-     * Catalyst
-     * Plack
-     * Starman
-
+     * DBIx::Class::Candy
+     * Import::Into
+     * Company CPAN
+     * ZMQ
+     * Thrift
 
 
 

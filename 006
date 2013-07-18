@@ -22,16 +22,17 @@
 
 
 
+     Object::Remote - https://metacpan.org/module/Object::Remote
 
-                                                     Toolchain
+     http://www.youtube.com/watch?v=eoNw5jmKvB8 #mst the __END__ of everything
 
-     * Dist::Zilla
-     * Devel::Local
-     * Object::Remote
-     * App::Nopaste
-     * App::GitGot
-     * Reply
-     * App::cpanminus
+     ssh $host | perl -
+
+
+
+
+
+
 
 
 

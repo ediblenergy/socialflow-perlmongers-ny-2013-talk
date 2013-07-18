@@ -12,37 +12,37 @@
 
 
 
+     SocialFlow's CPAN stack:
 
-
-
-
-
-
-
-
-
-
-
-
-
-                                                     Database
+     Database
 
      * DBIx::Class
-     * ZMQ
      * Redis
+     * ZMQ
 
+     Web Development
 
+     * Catalyst
+     * Plack
+     * Starman
 
+     3rd party
 
+     * Net::Twitter
+     * Facebook::Graph
+     * Web::Scraper
 
+     Toolchain
 
-
-
-
-
-
-
-
+     * Dist::Zilla
+     * Devel::Local
+     * Object::Remote
+     * System::Introspector
+     * App::Nopaste
+     * App::GitGot
+     * App::Ack
+     * Reply
+     * App::cpanminus
 
 
 
