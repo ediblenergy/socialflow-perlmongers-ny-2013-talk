@@ -1,0 +1,82 @@
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script>
+function navigate(e) {
+    var keynum = (window.event) // IE
+        ? e.keyCode
+        : e.which;
+    if (keynum == 8) {
+        window.location = "010" + ".html";
+        return false;
+    }
+    if (keynum == 13 || keynum == 32) {
+        window.location = "012" + ".html";
+        return false;
+    }
+    if (keynum == 73 || keynum == 105) {
+        window.location = "index.html";
+        return false;
+    }
+    return true;
+}
+</script>
+</head>
+<body onkeydown="return navigate(event)">
+<div style="border-style: solid ; border-width: 2px ; font-size: x-large">
+<pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+     use Hypertable::ThriftClient;
+     my $ht = Hypertable::ThriftClient-&gt;new($master, $port);
+     my $ns = $ht-&gt;namespace_open($namespace);
+     #...
+     my $users_mutator = $ht-&gt;mutator_open($ns, 'users', $ignore_unknown_cfs, 10);
+     #...
+
+     my $keys = Hypertable::ThriftGen::Key-&gt;new({ row =&gt; $row, column_family =&gt; $cf, column_qualifier =&gt; $cq });
+     my $cell = Hypertable::ThriftGen::Cell-&gt;new({key =&gt; $keys, value =&gt; $val});
+     $ht-&gt;mutator_set_cell($mutator, $cell);
+     $ht-&gt;mutator_flush($mutator);
+     $ht-&gt;mutator_close($users_mutator);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+<br>
+<div style="font-size: small">
+<p></p>
+</div>
+</body>
+</html>

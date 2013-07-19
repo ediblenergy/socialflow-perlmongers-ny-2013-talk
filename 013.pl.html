@@ -1,0 +1,82 @@
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script>
+function navigate(e) {
+    var keynum = (window.event) // IE
+        ? e.keyCode
+        : e.which;
+    if (keynum == 8) {
+        window.location = "012" + ".html";
+        return false;
+    }
+    if (keynum == 13 || keynum == 32) {
+        window.location = "014.pl" + ".html";
+        return false;
+    }
+    if (keynum == 73 || keynum == 105) {
+        window.location = "index.html";
+        return false;
+    }
+    return true;
+}
+</script>
+</head>
+<body onkeydown="return navigate(event)">
+<div style="border-style: solid ; border-width: 2px ; font-size: x-large">
+<pre>     use strict;
+     use warnings;
+
+     package SocialFlow::Web::Schema::Result::Client;
+     use SocialFlow::Billing::ProductType qw[ :all ];
+     use parent 'SocialFlow::Web::Schema::Result';
+     __PACKAGE__-&gt;load_components(qw/TimeStamp +SocialFlow::Web::Schema::Component::Roles/);
+     __PACKAGE__-&gt;table('client');
+     __PACKAGE__-&gt;add_columns(
+         client_id        =&gt; { data_type =&gt; 'serial', },
+         client_source_id =&gt; { data_type =&gt; 'integer'  },
+         company          =&gt; { data_type =&gt; 'citext', accessor =&gt; '_company' },    # case insensitive
+         website_url      =&gt; { data_type =&gt; 'text', },
+         access_tier      =&gt; { data_type =&gt; 'smallint', default_value =&gt; 0 },    # standard / business / enterprise (use sub tier - below)
+         active           =&gt; { data_type =&gt; 'smallint' },    # active, deleted, ?
+         opted_in         =&gt; { data_type =&gt; 'boolean', default_value =&gt; 'false' },
+         create_date      =&gt; { data_type =&gt; 'timestamp', set_on_create =&gt; 1 },
+         max_social_accts =&gt; { data_type =&gt; 'integer',  default_value =&gt; 0 },
+         default_time_zone =&gt; { data_type =&gt; 'text', default_value =&gt; 'UTC' },
+     );
+
+     # recurrence
+     # 0 - Monthly
+     # 1 = Yearly
+
+     __PACKAGE__-&gt;set_primary_key(&quot;client_id&quot;);
+     __PACKAGE__-&gt;belongs_to(
+         client_source =&gt; 'SocialFlow::Web::Schema::Result::ClientSource',
+         'client_source_id'
+     );
+     __PACKAGE__-&gt;has_many(
+         client_appusers =&gt; 'SocialFlow::Web::Schema::Result::ClientAppuser',
+         'client_id'
+     );
+     __PACKAGE__-&gt;many_to_many(
+         appusers =&gt; 'client_appusers',
+         'appuser'
+     );
+     __PACKAGE__-&gt;has_many(
+         client_appuser_roles =&gt;
+             'SocialFlow::Web::Schema::Result::ClientAppuserRole',
+         'client_id'
+     );
+
+     #......
+     1;
+
+</pre>
+</div>
+<br>
+<div style="font-size: small">
+<p></p>
+</div>
+</body>
+</html>

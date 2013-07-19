@@ -1,0 +1,78 @@
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script>
+function navigate(e) {
+    var keynum = (window.event) // IE
+        ? e.keyCode
+        : e.which;
+    if (keynum == 8) {
+        window.location = "021" + ".html";
+        return false;
+    }
+    if (keynum == 73 || keynum == 105) {
+        window.location = "index.html";
+        return false;
+    }
+    return true;
+}
+</script>
+</head>
+<body onkeydown="return navigate(event)">
+<div style="border-style: solid ; border-width: 2px ; font-size: x-large">
+<pre>
+
+
+
+
+
+
+
+
+
+     use strictures 1;
+     use JSON::XS;
+     use SocialFlow::Reporting::Schema;
+     use aliased 'SocialFlow::Web::Config::Cached' =&gt; 'SFConfig';
+     use aliased 'SocialFlow::Reporting::Daemon::Timeline::Item::Facebook' =&gt;
+       'TimelineItem';
+     use ZMQ;
+     use ZMQ::Constants qw[ZMQ_PUB ZMQ_SUB ZMQ_SUBSCRIBE];
+     use Data::Dumper::Concise;
+     my $cfg = SFConfig-&gt;config;
+     my $schema = SocialFlow::Reporting::Schema-&gt;connect($cfg-&gt;{reporting}{db});
+
+     my $ctx = ZMQ::Context-&gt;new(5);
+     my $subscriber = $ctx-&gt;socket( ZMQ_SUB );
+     $subscriber-&gt;connect(&quot;tcp://facebook-1:5500&quot;);
+     $subscriber-&gt;setsockopt(ZMQ_SUBSCRIBE, &quot;&quot;);
+     while ( my $msg = $subscriber-&gt;recv ) {
+         my $obj = decode_json( $msg-&gt;data );
+         unless( $obj-&gt;{created_time} &amp;&amp; ( $obj-&gt;{message} || $obj-&gt;{description} ) ) {
+             next;
+         }
+         my $ti = TimelineItem-&gt;new( %$obj, sf_reporting =&gt; $schema );
+         $ti-&gt;run;
+     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+<br>
+<div style="font-size: small">
+<p></p>
+</div>
+</body>
+</html>

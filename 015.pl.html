@@ -1,0 +1,98 @@
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script>
+function navigate(e) {
+    var keynum = (window.event) // IE
+        ? e.keyCode
+        : e.which;
+    if (keynum == 8) {
+        window.location = "014.pl" + ".html";
+        return false;
+    }
+    if (keynum == 13 || keynum == 32) {
+        window.location = "016.pl" + ".html";
+        return false;
+    }
+    if (keynum == 73 || keynum == 105) {
+        window.location = "index.html";
+        return false;
+    }
+    return true;
+}
+</script>
+</head>
+<body onkeydown="return navigate(event)">
+<div style="border-style: solid ; border-width: 2px ; font-size: x-large">
+<pre>     package SocialFlow::Schema::ResultBase;
+     use strictures 1;
+     #use Devel::SimpleTrace;
+     use DBIx::Class::Candy ();
+     use Import::Into;
+     use SocialFlow::Schema::Util ();
+     #use boolean ();
+     use Carp ();
+     use Safe::Isa;
+     use Data::Dumper::Concise;
+     use List::Util qw(first);
+
+
+     sub _schema_specific_components {
+         my $class = shift;
+         ## This should be implemented by the child if any additional
+         # components must be loaded by all result classes
+         return ();
+     }
+
+     sub _default_result_namespace {
+         my $class = shift;
+         ## Override if you want, reasonable default
+         return sub () { $class-&gt;_schema_class . '::Result' };
+     }
+
+     sub _schema_class {
+         die &quot;_schema_class must be implemented by child class&quot;;
+     }
+
+     sub _candy_components {
+         my($class,$params) = @_;
+         my @imports = qw[
+           TimeStamp
+           +SocialFlow::Schema::Util
+           Helper::Row::RelationshipDWIM
+           Helper::Row::ProxyResultSetMethod
+           ];
+         push (@imports, $class-&gt;_schema_specific_components);
+         if( $params-&gt;{extra_components} ) {
+             push( @imports, @{ delete $params-&gt;{extra_components} } );
+         }
+         return \@imports;
+     }
+
+     sub import {
+         my ( $class, $params ) = @_;
+         my $target = caller;
+         strictures-&gt;import::into($target,1);
+         indirect-&gt;import::into($target);
+         DBIx::Class::Candy-&gt;import::into( $target,
+             -components =&gt; $class-&gt;_candy_components($params), );
+         #boolean-&gt;import::into($target);
+         Carp-&gt;import::into($target);
+         Data::Dumper::Concise-&gt;import::into($target);
+         Safe::Isa-&gt;import::into($target);
+         {
+             #For https://metacpan.org/module/DBIx::Class::Helper::Row::RelationshipDWIM
+             no strict 'refs';
+             no warnings 'once';
+             *{&quot;$target\::default_result_namespace&quot;} = $class-&gt;_default_result_namespace;
+         }
+     }
+</pre>
+</div>
+<br>
+<div style="font-size: small">
+<p></p>
+</div>
+</body>
+</html>

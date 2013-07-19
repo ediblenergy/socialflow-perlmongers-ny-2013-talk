@@ -1,0 +1,90 @@
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script>
+function navigate(e) {
+    var keynum = (window.event) // IE
+        ? e.keyCode
+        : e.which;
+    if (keynum == 8) {
+        window.location = "013.pl" + ".html";
+        return false;
+    }
+    if (keynum == 13 || keynum == 32) {
+        window.location = "015.pl" + ".html";
+        return false;
+    }
+    if (keynum == 73 || keynum == 105) {
+        window.location = "index.html";
+        return false;
+    }
+    return true;
+}
+</script>
+</head>
+<body onkeydown="return navigate(event)">
+<div style="border-style: solid ; border-width: 2px ; font-size: x-large">
+<pre>     package SocialFlow::Web::Schema::Result::Client;
+     use SocialFlow::Web::Schema::ResultBase {
+         extra_components =&gt; [
+             qw[
+               +SocialFlow::Web::Schema::Component::Roles
+               ] ] };
+
+     table('client');
+
+     primary_column client_id =&gt; { data_type =&gt; serial };
+
+     integer_column 'client_source_id';
+
+     column company =&gt; { data_type =&gt; citext, accessor =&gt; '_company' };
+
+     text_column 'website_url';
+
+     column access_tier =&gt; { data_type =&gt; smallint, default_value =&gt; 0 };
+
+     # Rename the accessor since this is not a boolean as the column name would suggest.
+     column active =&gt; { data_type =&gt; smallint, accessor =&gt; '_active' };
+
+     boolean_column opted_in =&gt; { default_value =&gt; 0 };
+
+     timestamp_column create_date =&gt; { set_on_create =&gt; true };
+
+     integer_column max_social_accts =&gt; { default_value =&gt; 0 };
+
+     text_column default_time_zone =&gt; { default_value =&gt; 'UTC' };
+
+     # recurrence
+     # 0 - Monthly
+     # 1 = Yearly
+
+     belongs_to(
+         client_source =&gt; '::ClientSource',
+         'client_source_id'
+     );
+     has_many(
+         client_appusers =&gt; '::ClientAppuser',
+         'client_id'
+     );
+     many_to_many(
+         appusers =&gt; 'client_appusers',
+         'appuser'
+     );
+     has_many(
+         client_appuser_roles =&gt;
+             '::ClientAppuserRole',
+         'client_id'
+     );
+
+     #......
+
+     1;
+</pre>
+</div>
+<br>
+<div style="font-size: small">
+<p></p>
+</div>
+</body>
+</html>

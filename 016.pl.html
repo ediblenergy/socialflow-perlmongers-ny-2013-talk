@@ -1,0 +1,187 @@
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script>
+function navigate(e) {
+    var keynum = (window.event) // IE
+        ? e.keyCode
+        : e.which;
+    if (keynum == 8) {
+        window.location = "015.pl" + ".html";
+        return false;
+    }
+    if (keynum == 13 || keynum == 32) {
+        window.location = "017" + ".html";
+        return false;
+    }
+    if (keynum == 73 || keynum == 105) {
+        window.location = "index.html";
+        return false;
+    }
+    return true;
+}
+</script>
+</head>
+<body onkeydown="return navigate(event)">
+<div style="border-style: solid ; border-width: 2px ; font-size: x-large">
+<pre>     package SocialFlow::Schema::Util;
+     use strictures 1;
+     # ABSTRACT: Shared Schema column constants and utils
+
+     use DBIx::Class::Candy::Exports;
+     use JSON::XS;
+
+     my $json = JSON::XS-&gt;new;
+     sub json { $json }
+
+     use constant {
+         text      =&gt; 'text',
+         citext    =&gt; $ENV{CITEXT} || 'citext',
+         serial    =&gt; ( $ENV{SERIAL} ) || 'serial',
+         integer   =&gt; 'integer',
+         bigint    =&gt; 'bigint',
+         smallint  =&gt; 'smallint',
+         inet      =&gt; 'inet',
+         float     =&gt; 'float',
+         timestamp =&gt; 'timestamp',
+         date      =&gt; 'date',
+         enum      =&gt; 'enum',
+         bool  =&gt; 'boolean',    #namespace collision with boolean.pm
+         true  =&gt; 1,
+         false =&gt; 0,
+     };
+
+     sub _type_column {
+         my($class,$type,$col,$params) = @_;
+         $params ||= {};
+         $class-&gt;add_column( $col =&gt; { data_type =&gt; $type, %$params } )
+     }
+
+     sub integer_column {
+         shift-&gt;_type_column(integer,@_);
+     }
+
+     sub bigint_column {
+         shift-&gt;_type_column(bigint,@_);
+     }
+
+     sub text_column {
+         shift-&gt;_type_column(text,@_);
+     }
+
+     sub citext_column {
+         shift-&gt;_type_column(citext,@_);
+     }
+
+     sub date_column {
+         shift-&gt;_type_column(date,@_);
+     }
+
+     sub timestamp_column {
+         shift-&gt;_type_column(timestamp,@_);
+     }
+
+     sub boolean_column {
+         shift-&gt;_type_column(bool,@_);
+     }
+
+     sub bool_column {
+         shift-&gt;boolean_column(@_);
+     }
+
+     sub float_column {
+         shift-&gt;_type_column(float,@_);
+     }
+
+     sub create_date_column {
+         shift-&gt;add_columns(
+             create_date =&gt; { data_type =&gt; timestamp, set_on_create =&gt; 1, @_ } );
+     }
+
+     sub is_active_column {
+         my($class,$default) = @_;
+         $default //= 1;
+         shift-&gt;add_columns(
+             is_active =&gt; { data_type =&gt; bool, default_value =&gt; $default }
+         );
+     }
+
+     sub update_date_column {
+         shift-&gt;add_columns(
+             update_date =&gt; {
+                 data_type     =&gt; timestamp,
+                 set_on_create =&gt; 1,
+                 set_on_update =&gt; 1,
+                 @_
+             } );
+     }
+
+
+     export_methods(
+         [
+             qw(
+               integer_column
+               bigint_column
+               text_column
+               citext_column
+               date_column
+               timestamp_column
+               float_column
+               boolean_column
+               create_date_column
+               update_date_column
+               is_active_column
+
+               text
+               citext
+               timestamp
+               date
+               bool
+               serial
+               integer
+               bigint
+               smallint
+               inet
+               float
+               enum
+
+
+               true
+               false
+               )
+         ]
+     );
+     1;
+
+     =head1 NAME
+
+     SocialFlow::Schema::Util - Shared functionality across all sf schemata
+
+     =head1 SYNOPSIS
+
+         use DBIx::Class::Candy
+             -components =&gt; [qw(
+                 +SocialFlow::Schema::Util
+             )];
+
+     =head1 DESCRIPTION
+
+     =head1 AUTHOR
+
+     skaufman@socialflow.com
+
+     =head1 COPYRIGHT
+
+     Copyright (c) %s the %s L&lt;/AUTHOR&gt; and L&lt;/CONTRIBUTORS&gt;
+     as listed above.
+
+     =cut
+</pre>
+</div>
+<br>
+<div style="font-size: small">
+<p></p>
+</div>
+</body>
+</html>

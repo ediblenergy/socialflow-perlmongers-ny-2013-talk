@@ -1,0 +1,111 @@
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script>
+function navigate(e) {
+    var keynum = (window.event) // IE
+        ? e.keyCode
+        : e.which;
+    if (keynum == 8) {
+        window.location = "019.pl" + ".html";
+        return false;
+    }
+    if (keynum == 13 || keynum == 32) {
+        window.location = "021" + ".html";
+        return false;
+    }
+    if (keynum == 73 || keynum == 105) {
+        window.location = "index.html";
+        return false;
+    }
+    return true;
+}
+</script>
+</head>
+<body onkeydown="return navigate(event)">
+<div style="border-style: solid ; border-width: 2px ; font-size: x-large">
+<pre>     use strictures 1;
+
+     package Dist::Zilla::Plugin::SocialFlow::Release;
+     use Moose;
+     use Path::Class ();
+     use File::Copy  ();
+     use Git::Wrapper;
+     use Net::OpenSSH;
+     use File::HomeDir::PathClass;
+
+     with 'Dist::Zilla::Role::Releaser';
+
+     # ABSTRACT: Releases modules into the SocialFlow minicpan mirror
+
+     has ssh =&gt; (
+       is      =&gt; &quot;ro&quot;,
+       isa     =&gt; &quot;Net::OpenSSH&quot;,
+       lazy    =&gt; 1,
+       default =&gt; sub { Net::OpenSSH-&gt;new('mcpani@devdb') }
+     );
+
+     has config =&gt; (
+       is      =&gt; &quot;ro&quot;,
+       isa     =&gt; &quot;Path::Class::File&quot;,
+       lazy    =&gt; 1,
+       default =&gt; sub {
+         File::HomeDir::PathClass-&gt;home-&gt;file('.sfcpanrc');
+       }
+     );
+
+     has mcpan_repo =&gt; (
+       is =&gt; 'ro',
+       isa =&gt; 'Path::Class::Dir',
+       lazy_build =&gt; 1
+     );
+
+     has git =&gt; (
+       is      =&gt; &quot;ro&quot;,
+       isa     =&gt; &quot;Git::Wrapper&quot;,
+       lazy    =&gt; 1,
+       default =&gt; sub { Git::Wrapper-&gt;new( shift-&gt;mcpan_repo ) }
+     );
+
+     sub _build_mcpan_repo {
+       my ($self) = @_;
+     my $s = $self-&gt;config-&gt;stat  ? $self-&gt;config-&gt;slurp : undef;
+       return defined($s)
+         &amp;&amp; length($s)
+         ? Path::Class::dir($s)
+         : File::HomeDir::PathClass-&gt;home-&gt;subdir('SocialFlowCPAN');
+     }
+
+     sub release {
+       my ( $self, $tarball ) = @_;
+       $self-&gt;git-&gt;pull({rebase =&gt; 1});
+       $self-&gt;copy_to_mcpan_repo($_), $self-&gt;git-&gt;add(&quot;dists/$_&quot;) for $tarball;
+       $self-&gt;git-&gt;fetch;
+       $self-&gt;git-&gt;commit( { message =&gt; &quot;[RELEASE] $tarball&quot; } );
+       $self-&gt;git-&gt;push(qw[origin HEAD]);
+     #  $self-&gt;git-&gt;push('--tags');
+     #  $self-&gt;ssh_add_dist($tarball);
+     }
+
+     sub copy_to_mcpan_repo {
+       my ( $self, $tarball ) = @_;
+       my $target = $self-&gt;mcpan_repo-&gt;subdir('dists');
+       File::Copy::copy( $tarball, $target-&gt;stringify )
+         or die &quot;Couldn't release $tarball: $!&quot;;
+     }
+
+     sub ssh_add_dist {
+       my ( $self, $tarball ) = @_;
+       $self-&gt;ssh-&gt;system(&quot;add_dist $tarball&quot;);
+     }
+
+     1;
+</pre>
+</div>
+<br>
+<div style="font-size: small">
+<p></p>
+</div>
+</body>
+</html>

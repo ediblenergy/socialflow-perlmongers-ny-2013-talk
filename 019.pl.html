@@ -1,0 +1,82 @@
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script>
+function navigate(e) {
+    var keynum = (window.event) // IE
+        ? e.keyCode
+        : e.which;
+    if (keynum == 8) {
+        window.location = "018.sh" + ".html";
+        return false;
+    }
+    if (keynum == 13 || keynum == 32) {
+        window.location = "020.pl" + ".html";
+        return false;
+    }
+    if (keynum == 73 || keynum == 105) {
+        window.location = "index.html";
+        return false;
+    }
+    return true;
+}
+</script>
+</head>
+<body onkeydown="return navigate(event)">
+<div style="border-style: solid ; border-width: 2px ; font-size: x-large">
+<pre>
+
+
+
+
+     #!/usr/bin/env perl
+     use strictures 1;
+     use CPAN::Mini::Inject;
+     use 5.10.0;
+     my $mcpani = CPAN::Mini::Inject-&gt;new;
+     my $file = $ARGV[0] or die &quot;$@ $!&quot;;
+     my $cfg = $mcpani-&gt;config_class-&gt;new;
+     for (
+         [ 'local',      '/home/mcpani/mirror' ],
+         [ 'repository', '/home/mcpani/SocialFlowCPAN/dists' ],
+         [ 'dirmode',    '0755' ]
+       )
+     {
+         $cfg-&gt;set( $_-&gt;[0], $_-&gt;[1] );
+     }
+     $mcpani-&gt;config($cfg);
+     $mcpani-&gt;readlist;
+
+     $mcpani-&gt;add(
+         authorid =&gt; &quot;SOCIALFLOW&quot;,
+         file     =&gt; $file
+     );
+
+     my @added = $mcpani-&gt;added_modules;
+     foreach my $added (@added) {
+         print &quot;\nAdding File: $added-&gt;{file}\n&quot;;
+         print &quot;Author ID: $added-&gt;{authorid}\n&quot;;
+         my $modules = $added-&gt;{modules};
+         foreach my $mod ( sort keys %$modules ) {
+             print &quot;Module: $mod\n&quot;;
+             print &quot;Version: $modules-&gt;{$mod}\n&quot;;
+         }
+         print &quot;To repository: $mcpani-&gt;{config}{repository}\n\n&quot;;
+     }
+     $mcpani-&gt;writelist;
+
+
+
+
+
+
+
+</pre>
+</div>
+<br>
+<div style="font-size: small">
+<p></p>
+</div>
+</body>
+</html>
